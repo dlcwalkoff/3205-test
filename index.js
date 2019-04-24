@@ -3,6 +3,10 @@ RegExp для списка ID
 (([a-zA-Z0-9-_]{11})(,|\s|$))+
  */
 
+var EVENTS_TYPES = {
+    VIDEO_TITLE_READY: 'video_title_ready'
+};
+
 /**
  * @typedef {object} Video
  * @property {string} id
@@ -77,6 +81,10 @@ function VideoService(ids_string) {
             });
 
             foundVideo.title = video_title;
+
+            var event = new CustomEvent(EVENTS_TYPES.VIDEO_TITLE_READY, { detail: { video: foundVideo } });
+
+            document.dispatchEvent(event);
         });
 
         req.addEventListener('error', function(err) {
@@ -217,10 +225,6 @@ function App() {
                 var idsString = videoIDsInput.value;
 
                 klass.VIDEO_SERVICE = new VideoService(idsString);
-
-                klass.VIDEO_SERVICE.videos.forEach(function (video) {
-                    klass.VIDEO_COMPONENTS.push(new VideoCmp(video));
-                });
             }
         });
 
@@ -239,6 +243,15 @@ function App() {
                 });
             }
         });
+
+        document.addEventListener(EVENTS_TYPES.VIDEO_TITLE_READY, function (e) {
+            var video = e.detail.video;
+            var component = new PlayerCmp(video);
+
+            klass.PLAYER_COMPONENTS.push(component);
+
+            component.render();
+        });
     };
 
     return this;
@@ -247,3 +260,22 @@ function App() {
 var APP = new App();
 
 APP.startup();
+
+
+
+// !!!CustomEvent polyfill for IEs!!!
+(function () {
+
+    if ( typeof window.CustomEvent === "function" ) return false;
+
+    function CustomEvent ( event, params ) {
+        params = params || { bubbles: false, cancelable: false, detail: null };
+        var evt = document.createEvent( 'CustomEvent' );
+        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+        return evt;
+    }
+
+    CustomEvent.prototype = window.Event.prototype;
+
+    window.CustomEvent = CustomEvent;
+})();
