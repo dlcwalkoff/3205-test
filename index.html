@@ -9,10 +9,10 @@
 <body>
 
 <div id="app">
-    <div id="video-input">
-        <textarea placeholder="Insert video ID list here"></textarea>
-        <button>Upload videos</button>
-    </div>
+    <form id="video-ids-form">
+        <input id="video-ids-input" type="text" pattern="(([a-zA-Z0-9-_]{11})(,|\s|$))+" placeholder="Insert video ID list here">
+        <button type="submit" id="video-ids-btn">Upload videos</button>
+    </form>
 
     <main id="video-grid">
         <div class="video-cell">

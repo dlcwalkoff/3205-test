@@ -3,14 +3,14 @@
     flex-direction: column;
 }
 
-#video-input {
+#video-ids-form {
     display: flex;
     justify-content: center;
     align-content: center;
     max-height: 40px;
 }
 
-#video-input > textarea {
+#video-ids-form > input {
     margin-right: 1em;
 }
 
