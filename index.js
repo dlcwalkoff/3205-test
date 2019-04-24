@@ -8,6 +8,7 @@ RegExp для списка ID
  * @property {string} id
  * @property {string} preview_url
  * @property {string} video_url
+ * @property {string} player_url
  * @property {string} title
  */
 
@@ -35,8 +36,16 @@ function VideoService(ids_string) {
      * @param {string} id
      * @return {string}
      */
-    this.videoUrlGenerate = function (id) {
+    this.playerUrlGenerate = function (id) {
         return '//www.youtube.com/embed/{VIDEO_ID}?autoplay=1'.replace('{VIDEO_ID}', id);
+    };
+
+    /**
+     * @param {string} id
+     * @return {string}
+     */
+    this.videoUrlGenerate = function (id) {
+        return 'http://www.youtube.com/watch?v={VIDEO_ID}'.replace('{VIDEO_ID}', id);
     };
 
     /**
@@ -87,6 +96,7 @@ function VideoService(ids_string) {
             id: id,
             preview_url: klass.previewUrlGenerate(id),
             video_url: video_url,
+            player_url: klass.playerUrlGenerate(id),
             title: undefined
         }
     });
