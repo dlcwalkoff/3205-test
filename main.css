@@ -27,6 +27,24 @@
 
 .video-cell img {
     display: block;
-    max-width: 480px;
-    max-height: 270px;
+    width: 480px;
+    height: 270px;
+    max-width: 100vw;
+    object-fit: cover;
+}
+
+.video-cell figure {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.video-cell figure figcaption {
+    width: 90%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.4);
+    bottom: 1em;
 }
