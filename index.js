@@ -106,7 +106,7 @@ function VideoService(ids_string) {
  * @param {Video} video
  * @constructor
  */
-function VideoCmp(video) {
+function PlayerCmp(video) {
     var klass = this;
 
     /**
@@ -129,63 +129,65 @@ function VideoCmp(video) {
         klass.playerEl.classList.add('hide');
     };
 
-    this.videoCellEl = (function () {
-        var cmp = document.createElement('div');
+    this.render = function () {
+        var videoCellEl = (function () {
+            var cmp = document.createElement('div');
 
-        cmp.classList.add('video-cell');
-        cmp.id = klass.video.id;
+            cmp.classList.add('video-cell');
+            cmp.id = klass.video.id;
 
-        return cmp;
-    })();
+            return cmp;
+        })();
 
-    this.previewEl = document.createElement('figure');
+        klass.previewEl = document.createElement('figure');
 
-    this.imgEl = (function () {
-        var cmp = document.createElement('img');
+        var imgEl = (function () {
+            var cmp = document.createElement('img');
 
-        cmp.src = klass.video.preview_url;
-        cmp.alt = klass.video.title;
+            cmp.src = klass.video.preview_url;
+            cmp.alt = klass.video.title;
 
-        return cmp;
-    })();
+            return cmp;
+        })();
 
 
-    this.captionEl = (function () {
-        var cmp = document.createElement('figcaption');
+        var captionEl = (function () {
+            var cmp = document.createElement('figcaption');
 
-        cmp.textContent = klass.video.title;
+            cmp.textContent = klass.video.title;
 
-        return cmp;
-    })();
+            return cmp;
+        })();
 
-    this.playerEl = (function () {
-        var cmp = document.createElement('iframe');
+        klass.playerEl = (function () {
+            var cmp = document.createElement('iframe');
 
-        cmp.width = '480';
-        cmp.height = '270';
-        cmp.src = klass.video.video_url;
-        cmp.frameborder = '0';
-        cmp.allowfullscreen = true;
-        cmp.classList.add('hide', 'player');
+            cmp.width = '480';
+            cmp.height = '270';
+            cmp.src = klass.video.player_url;
+            cmp.frameborder = '0';
+            cmp.allowfullscreen = true;
+            cmp.classList.add('hide', 'player');
 
-        return cmp;
-    })();
+            return cmp;
+        })();
 
-    this.previewEl.append(this.imgEl, this.captionEl);
-    this.videoCellEl.append(this.previewEl, this.playerEl);
+        klass.previewEl.append(imgEl, captionEl);
+        videoCellEl.append(klass.previewEl, klass.playerEl);
 
-    this.videoCellEl.addEventListener('click', function (e) {
-        e.startedVideo = klass.video.id;
-        klass.activePlayer = !klass.activePlayer;
+        videoCellEl.addEventListener('click', function (e) {
+            e.startedVideo = klass.video.id;
+            klass.activePlayer = !klass.activePlayer;
 
-        if (klass.activePlayer) {
-            klass.play();
-        } else {
-            klass.stop();
-        }
-    });
+            if (klass.activePlayer) {
+                klass.play();
+            } else {
+                klass.stop();
+            }
+        });
 
-    document.getElementById('video-grid').append(this.videoCellEl);
+        document.getElementById('video-grid').append(videoCellEl);
+    };
 }
 
 function App() {
@@ -197,9 +199,9 @@ function App() {
     this.VIDEO_SERVICE = undefined;
 
     /**
-     * @type {VideoCmp[]}
+     * @type {PlayerCmp[]}
      */
-    this.VIDEO_COMPONENTS = [];
+    this.PLAYER_COMPONENTS = [];
 
     this.startup = function () {
         var videoIDsInput = document.getElementById('video-ids-input');
@@ -225,8 +227,8 @@ function App() {
         videoGrid.addEventListener('click', function (e) {
             var startedVideo = e.startedVideo;
 
-            var activePlayers = klass.VIDEO_COMPONENTS.filter(function (video) {
-                return video.activePlayer === true;
+            var activePlayers = klass.PLAYER_COMPONENTS.filter(function (player) {
+                return player.activePlayer === true;
             });
 
             if (activePlayers.length > 1) {
