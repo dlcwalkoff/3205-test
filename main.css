@@ -47,6 +47,14 @@
     margin-inline-start: 0;
 }
 
+iframe.hide {
+    display: none;
+}
+
+.video-cell figure.hide {
+    display: none;
+}
+
 .video-cell figure figcaption {
     width: 90%;
     position: absolute;
