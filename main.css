@@ -12,6 +12,7 @@
 
 #video-ids-form > input {
     margin-right: 1em;
+    width: 50%;
 }
 
 #video-grid {
