@@ -104,6 +104,21 @@ function VideoCmp(video) {
      */
     this.video = video;
 
+    /**
+     * @type {boolean}
+     */
+    this.activePlayer = false;
+
+    this.play = function () {
+        klass.previewEl.classList.add('hide');
+        klass.playerEl.classList.remove('hide');
+    };
+
+    this.stop = function () {
+        klass.previewEl.classList.remove('hide');
+        klass.playerEl.classList.add('hide');
+    };
+
     this.videoCellEl = (function () {
         var cmp = document.createElement('div');
 
@@ -149,6 +164,17 @@ function VideoCmp(video) {
     this.previewEl.append(this.imgEl, this.captionEl);
     this.videoCellEl.append(this.previewEl, this.playerEl);
 
+    this.videoCellEl.addEventListener('click', function (e) {
+        e.startedVideo = klass.video.id;
+        klass.activePlayer = !klass.activePlayer;
+
+        if (klass.activePlayer) {
+            klass.play();
+        } else {
+            klass.stop();
+        }
+    });
+
     document.getElementById('video-grid').append(this.videoCellEl);
 }
 
@@ -168,6 +194,7 @@ function App() {
     this.startup = function () {
         var videoIDsInput = document.getElementById('video-ids-input');
         var videoIDsForm = document.getElementById('video-ids-form');
+        var videoGrid = document.getElementById('video-grid');
 
         videoIDsForm.addEventListener('submit', function (event) {
             event.preventDefault();
@@ -181,6 +208,22 @@ function App() {
 
                 klass.VIDEO_SERVICE.videos.forEach(function (video) {
                     klass.VIDEO_COMPONENTS.push(new VideoCmp(video));
+                });
+            }
+        });
+
+        videoGrid.addEventListener('click', function (e) {
+            var startedVideo = e.startedVideo;
+
+            var activePlayers = klass.VIDEO_COMPONENTS.filter(function (video) {
+                return video.activePlayer === true;
+            });
+
+            if (activePlayers.length > 1) {
+                activePlayers.forEach(function (player) {
+                    if (player.video.id !== startedVideo) {
+                        player.stop();
+                    }
                 });
             }
         });
