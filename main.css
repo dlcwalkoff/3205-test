@@ -23,6 +23,7 @@
 #video-grid > .video-cell {
     margin: 40px 40px 0 0;
     flex-basis: calc(100%/3 - 120px);
+    max-width: 100vw;
 }
 
 .video-cell img {
