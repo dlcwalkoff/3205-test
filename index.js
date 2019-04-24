@@ -92,6 +92,39 @@ function VideoService(ids_string) {
     });
 }
 
+/**
+ *
+ * @param {Video} video
+ * @constructor
+ */
+function VideoCmp(video) {
+
+    /**
+     * @type {Video}
+     */
+    this.video = video;
+
+    var videoCellEl = document.createElement('div');
+
+    videoCellEl.classList.add('video-cell');
+    videoCellEl.id = this.video.id;
+
+    var previewEl = document.createElement('figure');
+    var imgEl = document.createElement('img');
+
+    imgEl.src = this.video.preview_url;
+    imgEl.alt = this.video.title;
+
+    var captionEl = document.createElement('figcaption');
+
+    captionEl.textContent = this.video.title;
+
+    previewEl.append(imgEl, captionEl);
+    videoCellEl.append(previewEl);
+
+    document.getElementById('video-grid').append(videoCellEl);
+}
+
 var VIDEO_SERVICE;
 
 var videoIDsInput = document.getElementById('video-ids-input');
@@ -106,9 +139,10 @@ videoIDsForm.addEventListener('submit', function (event) {
         var idsString = videoIDsInput.value;
 
         VIDEO_SERVICE = new VideoService(idsString);
+
+        VIDEO_SERVICE.videos.forEach(function (video) {
+            new VideoCmp(video);
+        });
     }
 });
 
-document.addEventListener('DOMContentLoaded', function (event) {
-    console.log('document');
-});
